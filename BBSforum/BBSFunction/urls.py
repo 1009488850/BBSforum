@@ -26,5 +26,5 @@ urlpatterns = [
     url(r'^account/is_logout/',views.acc_logout,name='is_logout'),
     url(r'^account/is_login/',views.acc_login,name='is_login'),
     url(r'^comment/$',views.comment_post,name='post_comment'),
-
+    url(r'^comment_list/(\d+)/$', views.get_comments, name="get_comments"),
 ]

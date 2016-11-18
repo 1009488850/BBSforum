@@ -19,7 +19,9 @@ def generate_comment_html(sub_comment_dic,margin_left_val):
         userprofile = models.Comment.objects.all().select_related()
         for i in userprofile:
             if i.id == k.id:
-                html += "<div style='margin-left:%spx;' class='comment-node'>" % margin_left_val + "<a href=''>" + i.user.name +"</a>"  + "   " + k.comment + "</div>"
+                html += "<div style='margin-left:%spx;' class='comment-node'>" % \
+                        margin_left_val + "<a href=''>" + i.user.name +"</a>"  +\
+                        "   " + k.comment + "</div>"
         if v_dic:
             html += generate_comment_html(v_dic,margin_left_val+25)
     return html
@@ -42,7 +44,8 @@ def build_comment_tree(comment_list):
         userprofile = models.Comment.objects.all()
         for i in userprofile:
             if i.id == k.id:
-                html += "<div class='comment-node'>" + "<a href=''>" + i.user.name +"</a>" + "   " +  k.comment + "</div>"
+                html += "<div class='comment-node'>" + "<a href=''>" + i.user.name + \
+                        "</a>" + "   " +  k.comment + "</div>"
                 html += generate_comment_html(v,margin_left + 25)
     html += "</div>"
     return format_html(html)
