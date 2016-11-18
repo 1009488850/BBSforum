@@ -1,0 +1,23 @@
+{% extends 'index.html' %}
+
+
+{% block page-container %}
+    <div class="container" style="width: 350px">
+
+      <form class="form-signin" action="" method="post"> {% csrf_token %}
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <label for="inputEmail" class="sr-only">username</label>
+        <input type="text" id="inputEmail" name="username" class="form-control" placeholder="请输入用户名" required="" autofocus="">
+        <label for="inputPassword" class="sr-only">Password</label>
+        <input type="password" id="inputPassword" name="password" class="form-control" placeholder="请输入密码" required="">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <p style="color: red;">{{ err_msg }}</p>
+      </form>
+
+    </div>
+{% endblock %}

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<!-- saved from url=(0048)http://v3.bootcss.com/examples/navbar-fixed-top/ -->
+<html lang="zh-CN"><style type="text/css" id="102882035280"></style><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script src="/static/bootstrap/js/hm.js"></script>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="http://v3.bootcss.com/favicon.ico">
+
+    <title>抽屉热榜</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/bootstrap/css/comtom.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="/static/bootstrap/css/navbar-fixed-top.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="/static/bootstrap/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    {% block head-js %}
+    {% endblock %}
+  </head>
+
+  <body>
+ {% csrf_token %}
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="#">抽屉热榜</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li><a href="{% url 'index' %}">全部</a></li>
+            <li><a href="{% url 'category' 2 %}">新闻</a></li>
+            <li><a href="{% url 'category' 3 %}">娱乐</a></li>
+            <li><a href="{% url 'category' 4 %}">体育</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+              {% if request.user.is_authenticated %}
+                   <li class="dropdown">
+                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ request.user.userprofile.name }} <span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li><a href="{% url 'create_article'  %}">发帖</a></li>
+                        <li><a href="#">Another action</a></li>
+                        <li><a href="#">Something else here</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li class="dropdown-header">Nav header</li>
+                        <li><a href="#">Separated link</a></li>
+                        <li><a href="{% url 'is_logout'  %}">logout</a></li>
+                      </ul>
+                    </li>
+              {% else %}
+                    {% block login-flag %}
+                        <li><a href="{% url 'is_login'  %}">登录/注册</a></li>
+                    {% endblock %}
+              {% endif %}
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <!-- Main component for a primary marketing message or call to action -->
+      <div class="jumbotron">
+        {% block page-container %}
+            <div class="row">
+               <div class="col-md-8 left-content-panel">
+                   <div class="content-box pull-left wrap-left">
+                       {% for item in articles reversed %}
+                           <div class="row article-box">
+                               <div class="col-md-4 article-head-img">
+                                   <img class="article-head-img" src="/static/{{ item.head_img }}">
+                               </div>
+                               <div class="col-md-8 article-summary">
+                                    <h4><a href="{% url 'article_detail' item.id %}">{{ item.title }}</a></h4>
+                                   <div class="article-attr">
+                                       <ul class="list-inline">
+                                           <li>{{ item.author.name }}</li>
+                                           <li>{{ item.publish_date }}</li>
+                                           <li>{{ item.thumbup_set.select_related.count }}</li>
+                                           <li>{{ item.comment_set.select_related.count }}</li>
+                                       </ul>
+                                       {{ item.summary }}
+                                       <hr/>
+                                   </div>
+
+                               </div>
+                           </div>
+                       {% endfor %}
+                   </div>
+               </div>
+               <div class="col-md-4 right-content-panel">
+
+               </div>
+            </div>
+
+        {% endblock %}
+      </div>
+
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/static/bootstrap/js/jquery-2.2.3.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <script src="/static/bootstrap/js/ie10-viewport-bug-workaround.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+            $($("#navbar a[href='{{ request.path }}']")[0]).parent().addClass("active");
+            $($("#navbar a[href='{{ request.path }}']")[0]).parent().siblings().removeClass("active");
+        });
+
+    </script>
+
+  {% block bottom-js %}
+
+  {% endblock %}
+
+
+
+</body></html>

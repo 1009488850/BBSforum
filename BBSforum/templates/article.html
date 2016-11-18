@@ -1,0 +1,66 @@
+{% extends 'index.html' %}
+{% load create_comment %}
+
+{% block page-container %}
+
+    <div class="">
+        <h3>
+            {{ article_obj.title }}
+        </h3>
+        <p>
+            <div class="article-attr">
+               <ul class="list-inline">
+                   <li><h4><a href="">{{ article_obj.author.name }}</a></h4></li>
+                   <li>{{ article_obj.publish_date }}</li>
+                   <li>{{ article_obj.thumbup_set.select_related.count }}</li>
+                   <li>{{ article_obj.comment_set.select_related.count }}</li>
+               </ul>
+            </div>
+            <img src="/static/{{ article_obj.head_img }}">
+            <p>{{ article_obj.content|safe }}</p>
+            <div>
+                <ul class="list-inline">
+                    <li><h5>{% build_comment_tree article_obj.comment_set.select_related %}</h5></li>
+                </ul>
+            </div>
+            <div class="comment-box">
+                {% if request.user.is_authenticated %}
+                    <textarea class="form-control" placeholder="评论" rows="2"></textarea>
+                    <button style="margin-top: 10px;"  class="pull-right  btn btn-success">评论</button>
+                {% else %}
+                    <div class="jumbotron">
+                        <h4 class="text-center"><a class="btn-link" href="{% url 'is_login' %}?next={{ request.path }}">登录</a>后评论</h4>
+                    </div>
+                {% endif %}
+            </div>
+        </p>
+    </div>
+{% endblock %}
+
+{% block bottom-js %}
+<script>
+    function getCsrf(){
+        return $("input[name='csrfmiddlewaretoken']").val()
+    }
+
+    $(document).ready(function () {
+        $(".comment-box button").click(function(){
+            var comment_text = $(".comment-box textarea").val();
+            if(comment_text.trim().length < 5){
+                alert("评论不能少于5个字！")
+            }else{
+
+                $.post("{% url 'post_comment' %}",
+                        {   comment_id:"{{ article_obj.id }}",
+                            parent_comment_id:null,
+                            comment:comment_text.trim(),
+                            csrfmiddlewaretoken:getCsrf(),
+                        },
+                        function(callback){
+                            console.log(callback)
+                        });
+            }
+        })
+    })
+</script>
+{% endblock %}
